@@ -3,13 +3,14 @@ import React, { useState, useRef, useEffect } from 'react';
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: 'สวัสดีค่ะ! ฉันคือผู้ช่วยแนะนำน้ำดื่ม มีอะไรให้ช่วยไหมคะ? 😊', isBot: true }
+    { text: 'สวัสดีค่ะ! ฉันคือผู้ช่วยแนะนำน้ำดื่ม มีอะไรให้ช่วยไหมคะ?', isBot: true }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const WEBHOOK_URL = 'https://sand21.app.n8n.cloud/webhook/99f1100e-e91a-4ea9-aa8a-531aa06ada36';
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -27,6 +28,26 @@ const Chatbot = () => {
     return sessionId;
   };
 
+  // ฟังก์ชันดึงข้อความตอบจาก n8n รองรับหลายเคส
+  const extractBotReply = (data) => {
+    if (!data) return null;
+
+    if (typeof data === 'string') return data;
+
+    return (
+      data.output ||
+      data.response ||
+      data.message ||
+      data.reply ||
+      data.text ||
+      data.answer ||
+      data.data?.reply ||
+      data.data?.message ||
+      data.data?.output ||
+      null
+    );
+  };
+
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -38,35 +59,28 @@ const Chatbot = () => {
     try {
       const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: userMessage,
           sessionId: getSessionId()
         })
       });
-      
-      const data = await response.json();
-      console.log('Response from n8n:', data);  // ⬅️ เพิ่มบรรทัดนี้
-    console.log('Full response:', response);   // ⬅️ เพิ่มบรรทัดนี้
-      setMessages(prev => [...prev, {
-        text: data.output || data.response || data.message || 'ขออภัยค่ะ ไม่สามารถตอบได้ในขณะนี้',
-        isBot: true
-      }]);
 
+      const data = await response.json();
+      const botReply = extractBotReply(data) || 'ขออภัยค่ะ ระบบไม่สามารถตอบได้ในตอนนี้';
+
+      setMessages(prev => [...prev, { text: botReply, isBot: true }]);
     } catch (error) {
-      console.error('Error:', error);
-      setMessages(prev => [...prev, {
-        text: 'ขออภัยค่ะ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
-        isBot: true
-      }]);
+      setMessages(prev => [
+        ...prev,
+        { text: 'ขออภัยค่ะ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', isBot: true }
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -75,6 +89,7 @@ const Chatbot = () => {
 
   return (
     <>
+      {/* Floating Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center text-white text-3xl z-50"
@@ -82,13 +97,17 @@ const Chatbot = () => {
         {isOpen ? '✕' : '💬'}
       </button>
 
+      {/* Chat Window */}
       {isOpen && (
         <div className="fixed bottom-24 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 animate-slideUp">
+          
+          {/* Header */}
           <div className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-5 rounded-t-2xl">
             <h3 className="text-xl font-bold">💧 ผู้ช่วยแนะนำน้ำดื่ม</h3>
             <p className="text-sm opacity-90">ออนไลน์</p>
           </div>
 
+          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4">
             {messages.map((message, index) => (
               <div
@@ -122,13 +141,14 @@ const Chatbot = () => {
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Input Box */}
           <div className="p-4 bg-white border-t border-gray-200 rounded-b-2xl">
             <div className="flex gap-2">
               <input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 placeholder="พิมพ์คำถามของคุณ..."
                 disabled={isLoading}
                 className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-full focus:outline-none focus:border-purple-500 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -142,6 +162,7 @@ const Chatbot = () => {
               </button>
             </div>
           </div>
+
         </div>
       )}
     </>
