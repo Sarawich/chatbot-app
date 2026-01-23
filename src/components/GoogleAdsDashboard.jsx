@@ -107,8 +107,8 @@ export default function GoogleAdsDashboard() {
         
         <div className="flex justify-between items-end mb-8 border-b border-gray-800 pb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white">Google Ads Dashboard46</h1>
-            <p className="text-gray-500">Real-time data from Google Sheets</p>
+            <h1 className="text-3xl font-bold text-white">Google Ads Dashboard</h1>
+            <p className="text-gray-500">Real-time sure sure</p>
           </div>
           <button
             onClick={fetchData}
@@ -131,7 +131,7 @@ export default function GoogleAdsDashboard() {
         )}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <SummaryCard label="Total Spend" value={`฿${summary.totalCost}`} />
+          <SummaryCard label="ยอดใช้จ่าย" value={`฿${summary.totalCost}`} />
           <SummaryCard label="Conversions" value={summary.totalConversions.toLocaleString()} />
           <SummaryCard label="Impressions" value={summary.totalImpressions.toLocaleString()} />
           <SummaryCard label="Interactions" value={summary.totalInteractions.toLocaleString()} />
@@ -144,12 +144,12 @@ export default function GoogleAdsDashboard() {
             <table className="w-full text-left">
               <thead className="bg-gray-800/50 text-gray-400 text-xs uppercase tracking-widest">
                 <tr>
-                  <th className="px-6 py-4">Campaign Name</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Type</th>
-                  <th className="px-6 py-4 text-right">Spend</th>
+                  <th className="px-6 py-4">ชื่อแคมเปญ</th>
+                  <th className="px-6 py-4">สถานะ</th>
+                  <th className="px-6 py-4">ประเภท</th>
+                  <th className="px-6 py-4 text-right">ค่าใช้จ่าย</th>
                   <th className="px-6 py-4 text-right">Conv.</th>
-                  <th className="px-6 py-4 text-center">Date</th>
+                  <th className="px-6 py-4 text-center">วันที่</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
