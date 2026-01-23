@@ -107,7 +107,7 @@ export default function GoogleAdsDashboard() {
         
         <div className="flex justify-between items-end mb-8 border-b border-gray-800 pb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white">Google Ads Dashboard</h1>
+            <h1 className="text-3xl font-bold text-white">Google Ads Dashboard46</h1>
             <p className="text-gray-500">Real-time data from Google Sheets</p>
           </div>
           <button
