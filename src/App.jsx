@@ -121,7 +121,8 @@ export default function App() {
           <h1>Quiet KPI turns noisy data into your calm Monday brief.</h1>
           <p>
             Connect your stack and get one elegant weekly digest with what changed, why it matters,
-            and what to do next.
+            and what to do next. Whereas before you were hunting across dashboards, now every key
+            signal lands in one calm brief.
           </p>
           <form className="email-capture" onSubmit={(e) => e.preventDefault()}>
             <input type="email" placeholder="you@company.com" aria-label="Email address" />
@@ -146,7 +147,8 @@ export default function App() {
           <h2>Faiz-inspired transformation moments</h2>
           <p>
             For teams that like a little drama: each digest includes a high-impact narrative pass that
-            feels like a classic henshin sequence.
+            feels like a classic henshin sequence. Whereas before updates felt scattered, now your
+            weekly story unfolds in one focused sequence.
           </p>
           <div className="transformation-grid">
             {transformationMoments.map((moment) => (
