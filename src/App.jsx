@@ -1,90 +1,57 @@
 import { useEffect, useState } from 'react'
 
-const reports = [
+const faizModes = [
   {
-    title: 'Revenue Momentum',
-    value: '+12.4% WoW',
-    note: 'MRR expansion led by self-serve upgrades and lower refund rates.',
+    name: 'Standing By',
+    code: '5-5-5 ENTER',
+    aura: 'โหมดเตรียมแปลงร่าง ระบบกำลังล็อก KPI ที่ต้องจับตา',
   },
   {
-    title: 'Activation Health',
-    value: '68% activated',
-    note: 'Onboarding flow 2 is outperforming control by 9 percentage points.',
+    name: 'Faiz Mode',
+    code: 'COMPLETE',
+    aura: 'แปลงร่างสำเร็จ! รายงานถูกยิงเข้าเข็มขัดเป็น digest พร้อมสู้ตลาด',
   },
   {
-    title: 'Cash Runway',
-    value: '19.2 months',
-    note: 'Burn decreased after support automation and infra rightsizing.',
-  },
-  {
-    title: 'Pipeline Quality',
-    value: '31 SQLs',
-    note: 'Founder-led content is driving higher-intent inbound leads.',
+    name: 'Axel Form',
+    code: 'START UP',
+    aura: 'เร่งความเร็วการตัดสินใจ 1000% สำหรับสัปดาห์ที่โคตรเดือด',
   },
 ]
 
-const transformationMoments = [
-  {
-    title: 'Faiz: Start-Up Pulse',
-    detail: 'Critical KPIs lock in under 13 seconds so Monday standup starts in sync.',
-  },
-  {
-    title: 'Axel Burst Mode',
-    detail: 'A fast lane summary highlights sudden spikes and dramatic trend reversals.',
-  },
-  {
-    title: 'Blaster Finish',
-    detail: 'One cinematic executive recap ties metrics, causes, and next actions together.',
-  },
+const reportCards = [
+  { title: 'Orphnoch Threat Level', value: 'Severe', note: 'CPA พุ่งแรงจากแคมเปญที่ยิง broad เกินไป' },
+  { title: 'Rider Energy Core', value: '+18.3%', note: 'MRR พุ่งจาก plan upgrade หลังเปิดฟีเจอร์ใหม่' },
+  { title: 'Delta Conversion Lock', value: '71%', note: 'Onboarding flow เวอร์ชันล่าสุดแปลง lead ได้ดีกว่าเดิม' },
+  { title: 'Mission Runway', value: '17.6 เดือน', note: 'Burn rate ลดลงหลัง optimize infra และ team ops' },
 ]
 
-const integrations = ['Stripe', 'HubSpot', 'Notion', 'Slack', 'Google Analytics', 'Airtable']
+const integrations = ['Stripe', 'Notion', 'Slack', 'HubSpot', 'GA4', 'Airtable']
 
-const testimonials = [
+const faqs = [
   {
-    quote:
-      'Quiet KPI helped us stop chasing vanity dashboards. Every Monday we know exactly what moved and what to do next.',
-    author: 'Maya Chen',
-    role: 'Founder, Loomly Labs',
+    q: 'มันเป็นแดชบอร์ดอีกอันไหม?',
+    a: 'ไม่ใช่ Quiet KPI คือเข็มขัดแปลงร่างข้อมูล: เอาความวุ่นวายมาเรียบเรียงเป็น weekly digest เดียวจบ.',
   },
   {
-    quote:
-      'The digest reads like a sharp operator in our inbox. My cofounder and I use it as our weekly standup agenda.',
-    author: 'Leo Martin',
-    role: 'Co-founder, North Harbor',
+    q: 'ต้องเซ็ตอัพนานแค่ไหน?',
+    a: 'โดยเฉลี่ย 15-20 นาที เชื่อมเครื่องมือแล้วระบบจะเริ่ม “Standing By” ให้อัตโนมัติ.',
   },
   {
-    quote:
-      'Our team literally calls the weekly “Faiz transformation scene” because it snaps chaos into focus so fast.',
-    author: 'Rani Patel',
-    role: 'CEO, August Health Tech',
-  },
-]
-
-const faqItems = [
-  {
-    q: 'How long does setup take?',
-    a: 'Most teams connect their tools and receive a first digest in under 20 minutes.',
-  },
-  {
-    q: 'Do you replace our BI stack?',
-    a: 'No. Quiet KPI sits on top of your stack and turns core signals into founder-ready narrative summaries.',
-  },
-  {
-    q: 'Can I invite my team or investors?',
-    a: 'Yes. You can add recipients and send separate views for operators, leadership, or investors.',
+    q: 'ส่งให้นักลงทุนด้วยได้ไหม?',
+    a: 'ได้ มีโหมด investor-ready summary ที่ตัดคำฟุ่มเฟือย เหลือแต่สัญญาณสำคัญ.',
   },
 ]
 
 export default function App() {
+  const [modeIndex, setModeIndex] = useState(0)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [yearly, setYearly] = useState(true)
+  const transformed = modeIndex > 0
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length)
+      setActiveTestimonial((prev) => (prev + 1) % 3)
     }, 4500)
-
     return () => clearInterval(interval)
   }, [])
 
@@ -99,69 +66,75 @@ export default function App() {
           }
         })
       },
-      { threshold: 0.2 },
+      { threshold: 0.18 },
     )
 
     revealElements.forEach((el) => observer.observe(el))
-
     return () => observer.disconnect()
   }, [])
 
-  const starterPrice = yearly ? '$39' : '$49'
-  const growthPrice = yearly ? '$99' : '$129'
+  const testimonials = [
+    '“ทุกวันจันทร์เรากดเข็มขัด 555 แล้วทีมเห็นสัญญาณธุรกิจพร้อมกันใน 1 หน้า” — Founder, Nebula Commerce',
+    '“จากเดิมอ่าน dashboard 7 อัน ตอนนี้มี digest เดียวที่พร้อมพุ่งเข้าประชุม” — CEO, Crimson Works',
+    '“โทนมันเบียวมาก แต่ insight แม่นจริง โคตรชอบ” — Co-founder, Night Shift Labs',
+  ]
 
   return (
-    <div className="page-shell">
+    <div className={`page-shell ${transformed ? 'transformed' : ''}`}>
+      <div className="grid-noise" />
       <div className="bg-blur bg-blur-1" />
       <div className="bg-blur bg-blur-2" />
 
       <main className="container">
         <section className="hero glass-panel">
-          <span className="pill">Founder-friendly weekly metric digest</span>
-          <h1>Quiet KPI turns noisy data into your calm Monday brief.</h1>
+          <p className="pill">QUIET KPI // MASKED RIDER FAIZ PROTOCOL</p>
+          <h1>ข้อมูลจะไม่ใช่ความวุ่นวายอีกต่อไป... HENSHIN.</h1>
           <p>
-            Connect your stack and get one elegant weekly digest with what changed, why it matters,
-            and what to do next. Whereas before you were hunting across dashboards, now every key
-            signal lands in one calm brief.
+            แปลง metric ดิบให้เป็น weekly digest แบบพระเอกโทคุซัตสึ: คม, เร็ว, และพร้อมยิง
+            action ในการประชุมทันที.
           </p>
+
+          <div className="belt-console glass-panel">
+            <div className="belt-header">
+              <strong>FAIZ GEAR</strong>
+              <span>{faizModes[modeIndex].code}</span>
+            </div>
+            <p>{faizModes[modeIndex].aura}</p>
+            <div className="belt-buttons">
+              {faizModes.map((mode, index) => (
+                <button
+                  key={mode.name}
+                  type="button"
+                  className={modeIndex === index ? 'selected' : ''}
+                  onClick={() => setModeIndex(index)}
+                >
+                  {mode.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <form className="email-capture" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="you@company.com" aria-label="Email address" />
-            <button type="submit">Get early access</button>
+            <input type="email" placeholder="rider@startup.com" aria-label="Email address" />
+            <button type="submit">Insert Mission Code</button>
           </form>
         </section>
 
         <section className="section reveal-on-scroll">
-          <h2>Sample weekly report cards</h2>
+          <h2>Weekly Battle Report</h2>
           <div className="report-grid">
-            {reports.map((report) => (
-              <article className="glass-panel card" key={report.title}>
-                <h3>{report.title}</h3>
-                <p className="metric">{report.value}</p>
-                <p>{report.note}</p>
+            {reportCards.map((card) => (
+              <article className="glass-panel card" key={card.title}>
+                <h3>{card.title}</h3>
+                <p className="metric">{card.value}</p>
+                <p>{card.note}</p>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="section transformation-strip">
-          <h2>Faiz-inspired transformation moments</h2>
-          <p>
-            For teams that like a little drama: each digest includes a high-impact narrative pass that
-            feels like a classic henshin sequence. Whereas before updates felt scattered, now your
-            weekly story unfolds in one focused sequence.
-          </p>
-          <div className="transformation-grid">
-            {transformationMoments.map((moment) => (
-              <article className="glass-panel transformation-card" key={moment.title}>
-                <h3>{moment.title}</h3>
-                <p>{moment.detail}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section integrations">
-          <h2>Connect the tools you already use</h2>
+        <section className="section">
+          <h2>Connect Your Arsenal</h2>
           <div className="integration-row glass-panel">
             {integrations.map((tool) => (
               <span key={tool}>{tool}</span>
@@ -170,17 +143,13 @@ export default function App() {
         </section>
 
         <section className="section">
-          <h2>What founders are saying</h2>
+          <h2>Rider Voices</h2>
           <div className="testimonial glass-panel">
-            <p>“{testimonials[activeTestimonial].quote}”</p>
-            <div>
-              <strong>{testimonials[activeTestimonial].author}</strong>
-              <span>{testimonials[activeTestimonial].role}</span>
-            </div>
+            <p>{testimonials[activeTestimonial]}</p>
             <div className="carousel-dots" role="tablist" aria-label="testimonial selector">
-              {testimonials.map((item, index) => (
+              {testimonials.map((_, index) => (
                 <button
-                  key={item.author}
+                  key={index}
                   type="button"
                   className={index === activeTestimonial ? 'active' : ''}
                   onClick={() => setActiveTestimonial(index)}
@@ -192,7 +161,7 @@ export default function App() {
         </section>
 
         <section className="section pricing-section">
-          <h2>Simple pricing that scales with your team</h2>
+          <h2>Choose Your Form</h2>
           <div className="pricing-toggle" role="radiogroup" aria-label="billing period">
             <button type="button" className={!yearly ? 'selected' : ''} onClick={() => setYearly(false)}>
               Monthly
@@ -203,36 +172,36 @@ export default function App() {
           </div>
           <div className="pricing-grid">
             <article className="glass-panel pricing-card">
-              <h3>Starter</h3>
+              <h3>Faiz Base</h3>
               <p className="price">
-                {starterPrice}<small>/month</small>
+                {yearly ? '$39' : '$49'}<small>/month</small>
               </p>
               <ul>
                 <li>1 workspace</li>
-                <li>Weekly digest email</li>
+                <li>Weekly battle digest</li>
                 <li>Core integrations</li>
               </ul>
-              <button type="button">Start free trial</button>
+              <button type="button">Stand By</button>
             </article>
             <article className="glass-panel pricing-card featured">
-              <h3>Growth</h3>
+              <h3>Faiz Axel</h3>
               <p className="price">
-                {growthPrice}<small>/month</small>
+                {yearly ? '$99' : '$129'}<small>/month</small>
               </p>
               <ul>
                 <li>Unlimited recipients</li>
-                <li>AI trend narratives</li>
-                <li>Investor snapshot mode</li>
+                <li>Narrative AI briefing</li>
+                <li>Investor finisher mode</li>
               </ul>
-              <button type="button">Choose Growth</button>
+              <button type="button">Complete</button>
             </article>
           </div>
         </section>
 
         <section className="section faq">
-          <h2>Frequently asked questions</h2>
+          <h2>FAQ</h2>
           <div className="faq-list">
-            {faqItems.map((item) => (
+            {faqs.map((item) => (
               <details className="glass-panel" key={item.q}>
                 <summary>{item.q}</summary>
                 <p>{item.a}</p>
@@ -243,9 +212,9 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        <p>© {new Date().getFullYear()} Quiet KPI. Built for calm, operator-grade growth.</p>
+        <p>© {new Date().getFullYear()} Quiet KPI // SMART BRAIN OPS</p>
         <div>
-          <a href="#">Privacy</a>
+          <a href="#">Gear Manual</a>
           <a href="#">Terms</a>
           <a href="#">Contact</a>
         </div>
